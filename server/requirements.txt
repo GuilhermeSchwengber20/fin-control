@@ -1,0 +1,36 @@
+
+
+- Cadastro de contas a pagar / receber
+
+- Possivel cadastrar uma conta recorrente (Ex: Aluguel / salario)
+
+- Possivel cadastrar uma conta parcelada
+
+- Cadastro de Usuários
+
+- Cadastro de Categorias
+
+Ao cadastrar uma conta recorrente, o sistema deve gerar uma conta que se repete peridiodicamente
+
+Ao cadastrar uma conta parcelada, o sistema deve permitir o cadastro do valor total e o numero de parcelas
+o usuario deve informar o numero de parcelas e a data do primeiro vencimento
+se a conta for recorrente a conta não pode ser parcelada;
+
+Campos no frontend
+
+Cadastro de Contas a Receber
+    - Descrição;
+    - Categoria;
+    - ehParcelada; - 1° Vencimento | Quantidade Parcelas
+    - ehRecorrente;
+    - Valor total;
+    - data de vencimento
+    
+
+Cadatro de categorias
+{
+    id;
+    descricao;
+    tipo;
+    status
+}
