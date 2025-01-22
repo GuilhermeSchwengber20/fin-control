@@ -1,21 +1,24 @@
-import type { Category } from '~/schemas/CategorySchema';
+import type { Product } from '~/schemas/ProductSchema.ts';
 import { toast } from '@/components/ui/toast/use-toast'
 import { ref } from 'vue';
 
 
 
-const useCategories = () => {
+const useProducts = () => {
     const config = useRuntimeConfig();
-    const categories = ref<Category[]>([])
+    const products = ref<Product[]>([]);
+    const updatedProduct = ref<Product | null>(null);
+
     const error = ref<string | null>(null);
+    const API_PATH = `${config.public.apiBaseUrl}/api/products`;
     
-    const addCategory = async (formValues: any) => {
+    const addProduct = async (formValues: any) => {
         const parsedData = JSON.stringify(formValues);
-        const res: Category = await $fetch(`${config.public.apiBaseUrl}/api/categories`, {
+        const res: Product = await $fetch(API_PATH, {
             method: "POST",
             body: parsedData,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
         
@@ -32,13 +35,13 @@ const useCategories = () => {
         }
     };
 
-    const updateCategory = async (formValues: any) => {
+    const updateProduct = async (formValues: any) => {
         const parsedData = JSON.stringify(formValues);
-        const res: Category = await $fetch(`${config.public.apiBaseUrl}/api/categories`, {
+        const res: Product = await $fetch(API_PATH, {
             method: "PUT",
             body: parsedData,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
         if(res.id) {
@@ -70,14 +73,14 @@ const useCategories = () => {
         }
     };
 
-    const deleteCategory = async (id: string) => {
+    const deleteProduct = async (id: string) => {
         try {
 
             // como melhorar isso aqui
             type BasicResponseAPI = {
                 message: string
             }
-            const {message} = await $fetch<BasicResponseAPI>(`${config.public.apiBaseUrl}/api/categories/${id}`, {
+            const {message} = await $fetch<BasicResponseAPI>(`${API_PATH}/${id}`, {
                 method: "DELETE"
             })
             
@@ -93,19 +96,33 @@ const useCategories = () => {
                 description: error.message || 'Não foi possível copiar o código. Tente novamente.',
             });
         } finally {
-            await fetchCategories();
+            await fetchProducts();
         }
         
     }
 
-    const fetchCategories = async () => {
+    const fetchProducts = async () => {
         try {
-            const { data, error: fetchError } = await useFetch<Category[]>(`${config.public.apiBaseUrl}/api/categories`);
+            const { data, error: fetchError } = await useFetch<Product[]>(API_PATH);
             if(fetchError.value) throw new Error(fetchError.value.message || "Erro desconhecido!");
-            categories.value = data.value || [];
+            products.value = data.value || [];
             
         } catch (err: any) {
             error.value = err.message || "Erro ao carregar categorias";
+        }
+    }
+
+    const fetchSelectedProduct = async (id: string) => {
+        try {
+            const { data, error: fetchError } = await useFetch<Product>(`${API_PATH}/${id}`);
+            if(fetchError.value) throw new Error(fetchError.value.message || "Erro desconhecido");
+
+            updatedProduct.value = data.value || null;
+        } catch (error: any) {
+            toast({
+                title: "Ops! algo deu errado",
+                description: error.message
+            })
         }
     }
 
@@ -113,14 +130,16 @@ const useCategories = () => {
   
 
     return {
-        categories,
-        addCategory,
-        updateCategory,
+        products,
+        addProduct,
+        updateProduct,
         handleCopyCode,
-        deleteCategory,
-        fetchCategories,
+        deleteProduct,
+        fetchProducts,
+        fetchSelectedProduct,
+        updatedProduct
     }
 
 };
 
-export default useCategories;
+export default useProducts;

@@ -1,37 +1,37 @@
 import { Category } from "../schemas/CategorySchema";
-import CategoryRepository from "../repositories/_inMemory/CategoryRepository";
+import InMemoryCategoryRepository from "../repositories/inMemory/InMemoryCategoryRepository";
 import { v4 as uuidv4 } from 'uuid';
 
-const categoryRepository = new CategoryRepository();
+const inMemoryCategoryRepository = new InMemoryCategoryRepository();
 
 class CategoryService {
     constructor() { }
 
     add(category: Category): Category  {
-        const savedCategory = categoryRepository.add({...category as Category, id: uuidv4()});
+        const savedCategory = inMemoryCategoryRepository.add({...category as Category, id: uuidv4()});
         return savedCategory;
     }
 
     getById(id_category: string): Category | undefined {
-        const category = categoryRepository.getById(id_category);
+        const category = inMemoryCategoryRepository.getById(id_category);
 
         return category;
     }
 
     update(category: Category) {
-        const savedCategory = categoryRepository.update(category);
+        const savedCategory = inMemoryCategoryRepository.update(category);
 
         return savedCategory;
     }
 
     delete(id_category: string) {
-        const idx = categoryRepository.delete(id_category);
+        const idx = inMemoryCategoryRepository.delete(id_category);
 
         return idx;
     }
 
     findAll() {
-        const categories = categoryRepository.findAll();
+        const categories = inMemoryCategoryRepository.findAll();
 
         return categories;
     }

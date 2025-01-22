@@ -1,5 +1,5 @@
 import { Category } from "../../schemas/CategorySchema";
-class CategoryRepository {
+class InMemoryCategoryRepository {
     categories: Category[];
 
     constructor() {
@@ -42,4 +42,4 @@ class CategoryRepository {
     }
 }
 
-export default CategoryRepository;
+export default InMemoryCategoryRepository;

@@ -34,3 +34,23 @@ Cadatro de categorias
     tipo;
     status
 }
+
+
+
+
+
+
+
+
+
+
+
+
+Autenticação VS Autorização
+
+Autenticação 
+    - Usada para verificar a identidade de um usuário
+    - Como verificamos a identidade desse usuario
+        - email
+        - senha
+        - token

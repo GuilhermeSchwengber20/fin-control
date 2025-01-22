@@ -24,33 +24,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { Transaction } from '~/schemas/TransactionSchema';
+import type { Product } from '~/schemas/ProductSchema';
+import useProducts from '~/composables/useProducts';
+
 
 const {
-    categories,
-    fetchCategories
-} = useCategories();
-
-const {
-    transactions,
+    products,
     handleCopyCode,
-    deleteTransaction,
+    deleteProduct,
 
-    fetchTransactions
-} = useTransactions();
+    fetchProducts
+} = useProducts();
 
+fetchProducts();
 
-
-fetchTransactions();
-fetchCategories();
-
-const handleEdit = async (transaction: Transaction) => {
-    navigateTo(`/app/contas/${transaction.id}`);
+const handleEdit = async (product: Product) => {
+    navigateTo(`/app/produtos/${product.id}`);
 };
-
-const convertDate = (date: string) => {
-    return date.split("-").reverse().join("/");
-}
 
 const convertToMoney = (value: number) => {
     return value.toLocaleString("pt-BR", {style: "currency", currency: "BRL"});
@@ -60,41 +50,32 @@ const convertToMoney = (value: number) => {
 <template>
     <div class="h-[90vh] w-full ">
         <h2 class="text-3xl font-bold pl-8 pt-8">
-            / Contas
+            / Produtos
         </h2>
         <div class="p-8">
             <div class="flex items-center gap-5">
                 <Input placeholder="Filtrar categorias..." class="w-52" />
-                <nuxt-link to="/app/contas/-1" class="flex items-center gap-2 border border-dashed p-2 rounded-md cursor-pointer hover:bg-muted hover:transition-all">
+                <nuxt-link to="/app/produtos/-1" class="flex items-center gap-2 border border-dashed p-2 rounded-md cursor-pointer hover:bg-muted hover:transition-all">
                     <PlusCircledIcon class="text-muted-foreground"/>
                     <span class="text-sm text-muted-foreground">Adicionar</span>
                 </nuxt-link>
             </div>
            <div class="border border-input mt-3 rounded-md h-[65vh] overflow-y-auto">
                 <Table class="">
-                    <TableCaption>Lista de suas transações cadastradas</TableCaption>
+                    <TableCaption>Lista de seus produtos cadastrados</TableCaption>
                     <TableHeader>
                         <TableRow>
                             <TableHead class="w-[150px]">
                                 Descrição
                             </TableHead>
                             <TableHead class="w-[150px]">
-                                Categoria
+                                $ Custo
                             </TableHead>
                             <TableHead class="w-[100px]">
-                                Tipo
-                            </TableHead>
-                            <TableHead class="w-[150px]">
-                                Valor Total
+                                $ Saída
                             </TableHead>
                             <TableHead class="w-[100px]">
-                                Status
-                            </TableHead>
-                            <TableHead class="w-[100px]">
-                                Vencimento
-                            </TableHead>
-                            <TableHead class="w-[100px]">
-                                Parcelas
+                                Estoque
                             </TableHead>
                             <TableHead class="w-[100px]">
                                Ação
@@ -102,34 +83,21 @@ const convertToMoney = (value: number) => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow v-for="transaction in transactions" :key="transaction.id">
+                        <TableRow v-for="product in products" :key="product.id">
                             <TableCell class="font-medium">
-                                {{ transaction.description }}
+                              {{ product.id }}
                             </TableCell>
-                            <TableCell>
-                                {{ categories.find(cat => cat.id === transaction.id_category)?.description || "" }}
+                            <TableCell class="font-medium">
+                                {{ product.description }}
                             </TableCell>
-                            <TableCell>
-                                {{ transaction.type === "expense" ? "Despesa" : "Receita" }}
+                            <TableCell class="font-medium">
+                                {{ convertToMoney(product.cost) }}
                             </TableCell>
-                            <TableCell>
-                                {{ convertToMoney(transaction.amount) }}
+                            <TableCell class="font-medium">
+                                {{ convertToMoney(product.amount) }}
                             </TableCell>
-                            <TableCell>
-                                {{ 
-                                    transaction.status === "pending" ? "Pendente" 
-                                    : transaction.status === "paid" ? "Pago" :
-                                    "Cancelada"
-                                }}
-                            </TableCell>
-                            <TableCell>
-                                {{ convertDate(transaction.dueDate) }}
-                            </TableCell>
-                            <TableCell>
-                                <span v-if="(transaction.totalInstallments || 0) > 1 && transaction.isInstallment">
-                                    {{ transaction.installmentNumber }} /
-                                </span>
-                                {{ transaction.totalInstallments || 1 }}
+                            <TableCell class="font-medium">
+                                {{ product.stock }}
                             </TableCell>
                             
                             <TableCell>
@@ -141,21 +109,21 @@ const convertToMoney = (value: number) => {
                                         <DropdownMenuLabel>Ações</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
                                         <DropdownMenuItem>
-                                            <div class="flex items-center gap-2" @click="handleEdit(transaction)">
+                                            <div class="flex items-center gap-2" @click="handleEdit(product)">
                                                 <Pencil2Icon class="text-muted-foreground" />
-                                                <span class="text-sm text-muted-foreground">Editar Categoria</span>
+                                                <span class="text-sm text-muted-foreground">Editar Produto</span>
                                             </div>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem>
-                                            <div class="flex items-center gap-2" @click="handleCopyCode(transaction.id || '')">
+                                            <div class="flex items-center gap-2" @click="handleCopyCode(product.id || '')">
                                                 <LinkNone1Icon class="text-muted-foreground" />
                                                 <span class="text-sm text-muted-foreground">Copiar Código</span>
                                             </div>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem>
-                                            <div class="flex items-center gap-2" @click="deleteTransaction(transaction.id || '')">
+                                            <div class="flex items-center gap-2" @click="deleteProduct(product.id || '')">
                                                 <TrashIcon class="text-muted-foreground" />
-                                                <span class="text-sm text-muted-foreground">Excluir Categoria</span>
+                                                <span class="text-sm text-muted-foreground">Excluir Produto</span>
                                             </div>
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>

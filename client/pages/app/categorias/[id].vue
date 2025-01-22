@@ -191,13 +191,7 @@ const handleCancelEdit = () => {
                                 </FormControl>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectItem value="act
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        ive">
+                                        <SelectItem value="active">
                                             ativo
                                         </SelectItem>
                                         <SelectItem value="inative">

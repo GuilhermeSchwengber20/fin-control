@@ -1,7 +1,7 @@
 import type { Transaction } from "../schemas/TransactionSchema";
-import TransactionRepository from "../repositories/_inMemory/TransactionRepository";
+import InMemoryTransactionRepository from "../repositories/inMemory/InMemoryTransactionRepository";
 
-const transactionRepository = new TransactionRepository();
+const inMemoryTransactionRepository = new InMemoryTransactionRepository();
 import { v4 as uuidv4 } from 'uuid';
 
 class TransactionService {
@@ -11,13 +11,13 @@ class TransactionService {
     }
 
     getById(id: string) {
-        const savedTransaction = transactionRepository.getById(id as string);
+        const savedTransaction = inMemoryTransactionRepository.getById(id as string);
 
         return savedTransaction;
     }
 
     addSingleTransaction(transaction: Transaction) {
-        const savedTransaction = transactionRepository.add({...transaction, id: uuidv4()});
+        const savedTransaction = inMemoryTransactionRepository.add({...transaction, id: uuidv4()});
 
         return savedTransaction;
     }
@@ -26,7 +26,7 @@ class TransactionService {
 
         if(transaction.totalInstallments) {
             transaction.totalInstallments = Number(transaction.totalInstallments);
-            const parentTransaction = transactionRepository.add({
+            const parentTransaction = inMemoryTransactionRepository.add({
                 ...transaction,
                 totalInstallments: transaction.totalInstallments,
                 installmentNumber: undefined,
@@ -34,7 +34,7 @@ class TransactionService {
             })
 
             for(let i = 0; i < Number(transaction.totalInstallments); i++) {
-                transactionRepository.add({
+                inMemoryTransactionRepository.add({
                     ...transaction,
                     dueDate: this.generateDueDate(transaction.dueDate, i), // nesse caso em conta parcelada dueDate sera considerado o primeiro pagamento
                     installmentNumber: i + 1,
@@ -61,18 +61,18 @@ class TransactionService {
     }  
      
     findAll(): Transaction[] {
-        const transactions = transactionRepository.findAll();
+        const transactions = inMemoryTransactionRepository.findAll();
         return transactions;
     }
 
     update(transaction: Transaction): number {
-        const updatedTransaction = transactionRepository.update(transaction);
+        const updatedTransaction = inMemoryTransactionRepository.update(transaction);
 
         return updatedTransaction;
     }
 
     delete(id: string) {
-        const idxDeleted = transactionRepository.delete(id);
+        const idxDeleted = inMemoryTransactionRepository.delete(id);
 
         return idxDeleted;
     }

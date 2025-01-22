@@ -16,6 +16,7 @@ import NavItem from '~/components/NavItem.vue';
                     <NavItem :label="'Contas'" :to="'/app/contas'" />
                     <NavItem :label="'Categorias'" :to="'/app/categorias'" />
                     <NavItem :label="'Dashboard'" :to="'/app/dashboard'" />
+                    <NavItem :label="'Produtos'" :to="'/app/produtos'" />
                     <!-- <NavItem :label="'Configurações'" :to="'/app/configuracao'" /> -->
                 </nav>
             </div>

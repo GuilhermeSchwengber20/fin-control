@@ -75,7 +75,7 @@ const onSubmit = handleSubmit(async (formValues) => {
                             </FormItem>
                         </FormField>
                     </div>
-                    <div>
+                    <div v-if="!login">
                         <FormField v-slot="{ field }" name="name">
                             <FormItem>
                                 <FormLabel>Nome</FormLabel>

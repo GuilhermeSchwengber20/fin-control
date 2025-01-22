@@ -1,6 +1,6 @@
 import type { Transaction } from "../../schemas/TransactionSchema";
 
-class TransactionRepository {
+class InMemoryTransactionRepository {
     transactions: Transaction[];
 
     constructor() {
@@ -40,4 +40,4 @@ class TransactionRepository {
     }
 }
 
-export default TransactionRepository;
+export default InMemoryTransactionRepository;
