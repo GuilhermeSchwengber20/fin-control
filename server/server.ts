@@ -8,4 +8,4 @@ server.use(cors());
 server.use(express.json())
 server.use(express.urlencoded({extended: true}))
 server.use("/api", router);
-server.listen(3030);
+server.listen(process.env.PORT || 3030);

@@ -22,6 +22,8 @@ class AuthController {
             const validatedData = await executeAuthSchema.validate(Req.body, { stripUnknown: true });
             const resultadoAutenticacao = await authService.execute(validatedData);
 
+            Res.status(200).json(resultadoAutenticacao);
+
         } catch (error: any) {
             Res.status(400).json({error: error.message});
         }
@@ -34,3 +36,21 @@ class AuthController {
 }
 
 export default AuthController;
+
+
+
+/*
+    FRONT
+        USUARIO - ENVIA O TOKEN
+        CONTAS - ENVIA O TOKEN
+        CATEGORIAS - ENVIA O TOKEN
+
+
+        - RETORNAR UM TOKEN ATUALIZADO
+        - TOKEN PRECISA SER VÁLIDO
+        - REFRESH TOKEN
+
+        -- SE O TOKEN ESTIVER EXPIRADO MANDA O REFRESH TOKEN, SE TIVER NO PRAZO O REFRESH TOKEN VAI RENOVAR
+        -- FINAL AULA #5
+
+*/
