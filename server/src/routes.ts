@@ -4,6 +4,7 @@ import CategoryController from "./controllers/CategoryController";
 import TransactionController from "./controllers/TransactionController";
 import AuthController from "./controllers/AuthController";
 import ProductController from "./controllers/ProductController";
+import { AuthMiddleware } from "./middlewares/AuthMiddleware";
 const router = Router();
 
 const categoryController = new CategoryController();
@@ -15,7 +16,7 @@ router.delete("/categories/:id_category", categoryController.delete);
 
 
 const transactionController = new TransactionController();
-router.get("/transactions", transactionController.findAll);
+router.get("/transactions", AuthMiddleware, transactionController.findAll);
 router.get("/transactions/:id_transaction", transactionController.getById);
 router.post("/transactions", transactionController.add);
 router.put("/transactions", transactionController.update);
@@ -31,7 +32,7 @@ router.put("/products/:id", productController.delete);
 
 const authController = new AuthController();
 router.post("/auth", authController.execute);
-router.post("/auth/refreshToken", authController.refreshToken);
+router.post("/auth/refresh-token", authController.refreshToken);
 
 
 export default router;

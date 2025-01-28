@@ -8,16 +8,26 @@ const useCategories = () => {
     const config = useRuntimeConfig();
     const categories = ref<Category[]>([])
     const error = ref<string | null>(null);
+    const { api } = useApi();
     
     const addCategory = async (formValues: any) => {
         const parsedData = JSON.stringify(formValues);
-        const res: Category = await $fetch(`${config.public.apiBaseUrl}/api/categories`, {
-            method: "POST",
-            body: parsedData,
-            headers: {
-                'Content-Type': 'application/json'
+        const res: any = await api("categories", {
+            options: {
+                method: "POST",
+                body: parsedData,
+                headers: {
+                    teste: "hello world"
+                }
             }
-        });
+        })
+        // const res: Category = await $fetch(`${config.public.apiBaseUrl}/api/categories`, {
+        //     method: "POST",
+        //     body: parsedData,
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // });
         
         if(res.id) {
             toast({

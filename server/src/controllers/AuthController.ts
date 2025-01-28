@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { executeAuthSchema } from "../schemas/AuthSchema";
+import { executeAuthSchema, RefreshTokenInterface, refreshTokenSchema } from "../schemas/AuthSchema";
 import AuthService from "../services/AuthService";
 
 
@@ -31,14 +31,21 @@ class AuthController {
     }
 
     async refreshToken(Req: Request, Res: Response) {
+        try {
+            const authService = new AuthService();
+            
+            const dadosValdiados = await refreshTokenSchema.validate(Req.body, {stripUnknown: true});
 
+            const resultadoRefreshToken = await authService.refreshToken(dadosValdiados)
+
+            Res.json(resultadoRefreshToken);
+        
+        } catch (error: any) {
+            Res.status(400).json(error.message);
+        }
     }
 }
-
 export default AuthController;
-
-
-
 /*
     FRONT
         USUARIO - ENVIA O TOKEN
@@ -53,4 +60,5 @@ export default AuthController;
         -- SE O TOKEN ESTIVER EXPIRADO MANDA O REFRESH TOKEN, SE TIVER NO PRAZO O REFRESH TOKEN VAI RENOVAR
         -- FINAL AULA #5
 
+        - refresh token - serve somente para renovar o token
 */
