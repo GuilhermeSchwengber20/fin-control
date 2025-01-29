@@ -13,6 +13,8 @@ export function useApi() {
                 headers
             })
 
+            console.log(res);
+
             return res;
         } catch (error: any) {
             console.error(error.message);

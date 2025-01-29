@@ -18,32 +18,27 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form'
-import { toast } from '@/components/ui/toast/use-toast'
 
-import { ref } from "vue";
-import { RegisterUserSchema } from "@/schemas/UserSchema.js"
+import { LoginUserSchema } from "@/schemas/UserSchema.js"
 import { toTypedSchema } from '@vee-validate/zod'
 
 import { useForm } from 'vee-validate';
 
-const formSchema = toTypedSchema(RegisterUserSchema);
-const login = ref(false);
+const formSchema = toTypedSchema(LoginUserSchema);
+
+const { login } = useAuth();
 
 const { handleSubmit, resetForm, setFieldValue } = useForm({
   validationSchema: formSchema,
 });
 
-const handleLoginRegister = () => {
-    login.value = !login.value;
-}
 
 const onSubmit = handleSubmit(async (formValues) => {
-  try {
-    console.log(formValues);
+    try {
+        login(formValues);
+    } catch (error: any) {
 
-  } catch (error: any) {
-    
-  }
+    }
 });
 </script>
 
@@ -57,38 +52,6 @@ const onSubmit = handleSubmit(async (formValues) => {
             </CardHeader>
             <form>
                 <CardContent class="flex flex-col gap-3">
-                    <div class="hidden">
-                        <FormField v-slot="{ field }" name="id">
-                            <FormItem>
-                                <FormLabel>ID</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        v-bind="field"
-                                        autocomplete="off"
-                                        placeholder=""
-                                        type="text"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
-                    </div>
-                    <div v-if="!login">
-                        <FormField v-slot="{ field }" name="name">
-                            <FormItem>
-                                <FormLabel>Nome</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        v-bind="field"
-                                        autocomplete="off"
-                                        placeholder=""
-                                        type="text"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
-                    </div>
                     <div>
                         <FormField v-slot="{ field }" name="email">
                             <FormItem>
@@ -121,32 +84,9 @@ const onSubmit = handleSubmit(async (formValues) => {
                             </FormItem>
                         </FormField>
                     </div>
-                    <div>
-                        <FormField v-slot="{ field }" name="confirmPassword" v-if="!login">
-                            <FormItem>
-                                <FormLabel>Confirmar senha</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        v-bind="field"
-                                        autocomplete="off"
-                                        placeholder=""
-                                        type="password"
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
-                    </div>
                 </CardContent>
                 <CardFooter class="flex flex-col">
-                    <Button class="w-full" v-if="!login" @click="onSubmit">Cadastrar</Button>
-                    <Button class="w-full" v-else>Fazer login</Button>
-                    <small v-if="!login">
-                        Já está cadastrado? Faça o login <span class="text-primary underline font-bold cursor-pointer" @click="handleLoginRegister">aqui</span>
-                    </small>
-                    <small v-else>
-                        Não tem cadastro? Faça o cadastro <span class="text-primary underline font-bold cursor-pointer" @click="handleLoginRegister">aqui</span>
-                    </small>
+                    <Button class="w-full" @click="onSubmit">Fazer login</Button>
                 </CardFooter>
             </form>
         </Card>

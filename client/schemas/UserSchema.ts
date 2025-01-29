@@ -9,4 +9,10 @@ export const RegisterUserSchema = z.object({
     confirmPassword: z.string().min(4),
 })
 
+export const LoginUserSchema = z.object({
+    email: z.string().email(),
+    password: z.string()
+})
+
 export type User = z.infer<typeof RegisterUserSchema>
+export type UserLogin = z.infer<typeof LoginUserSchema>
