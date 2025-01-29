@@ -5,7 +5,8 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt'],
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.API_BASE_URL || "http://localhost:3000"
+      apiBaseUrl: process.env.API_BASE_URL || "http://localhost:3000",
+      apiBase: "http://localhost:3030"
     }
   },
   shadcn: {

@@ -17,6 +17,7 @@ export function useApi() {
 
             return res;
         } catch (error: any) {
+            console.log("aqui");
             console.error(error.message);
         }
     }

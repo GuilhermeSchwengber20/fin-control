@@ -24,20 +24,26 @@ import { toTypedSchema } from '@vee-validate/zod'
 
 import { useForm } from 'vee-validate';
 
-const formSchema = toTypedSchema(LoginUserSchema);
+import { toast } from '@/components/ui/toast/use-toast'
 
-const { login } = useAuth();
+const formSchema = toTypedSchema(LoginUserSchema);
 
 const { handleSubmit, resetForm, setFieldValue } = useForm({
   validationSchema: formSchema,
 });
 
+const { login } = useAuth();
 
-const onSubmit = handleSubmit(async (formValues) => {
+const onSubmit =  handleSubmit(async (formValues) => {
     try {
-        login(formValues);
+        await login(formValues);
+        navigateTo("/app/dashboard");
     } catch (error: any) {
-
+        toast({
+            title: "Algo deu errado",
+            description: error.message
+        });
+        
     }
 });
 </script>

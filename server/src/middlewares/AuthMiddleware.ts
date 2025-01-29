@@ -17,7 +17,7 @@ export const AuthMiddleware = async (Req: Request, Res: Response, Next: NextFunc
             Next();
             return;
         }
-        throw new Error("Authorization e RefreshToken são obrigatórios")
+        throw new Error("authorization e refresh_token são obrigatórios")
     } catch (err: any) {
         Res.status(400).json({error: err.message});
     }

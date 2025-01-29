@@ -5,6 +5,8 @@ import { toast } from '@/components/ui/toast/use-toast'
 
 const useTransactions = () => {
     const config = useRuntimeConfig();
+    const { getTokens } = useAuth();
+
     const transactions = ref<Transaction[]>([])
     
     const isInstallment = ref(false);
@@ -121,6 +123,8 @@ const useTransactions = () => {
 
     const fetchTransactions = async () => {
         try {
+            const { token, refresh_token } = getTokens();
+            const headers = useRequestHeaders();
             const { data, error: fetchError } = await useFetch<Transaction[]>(`${config.public.apiBaseUrl}/api/transactions`);
             if(fetchError.value) throw new Error(fetchError.value.message || "Erro desconhecido")
             transactions.value = data.value || [];
